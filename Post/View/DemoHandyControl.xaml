@@ -1,0 +1,436 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Post.View"
+        xmlns:hc="https://handyorg.github.io/handycontrol" x:Class="Post.View.DemoHandyControl"
+        mc:Ignorable="d"
+        Title="DemoHandyControl" Height="670" Width="1500" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Name="Left" >
+            <StackPanel Background="#FFEBFCFF" Margin="0,0,0,10">
+                <hc:Gravatar Source="D:\.NET Location\PRN221_FinalProject\Post\Assets\male-avatar-profile-icon-of-smiling-caucasian-man-vector.jpg" Margin="0 20 2 2"/>
+                <hc:SimpleText Text="Nguyen Van Son" x:Name="txtEmployeeName"  Margin="105 5 0 0" Width="183"/>
+                <Button Background="#008CBA" Name="saleBtn" Foreground="White" Content="Sale" Margin="0,78,0,0" VerticalAlignment="Top" Width="176" Height="37" FontSize="16" Click="saleBtn_Click" Cursor=""/>
+                <Button Background="#008CBA" Name="customerBtn" Foreground="White"  Content="Customer" Margin="0,22,0,0" VerticalAlignment="Top" Width="176" Height="37" FontSize="16" Click="customerBtn_Click"/>
+                <Button Background="#008CBA" Name="orderHistoryBtn" Foreground="White"  Content="Order History" Margin="0,22,0,0" VerticalAlignment="Top" Width="176" Height="38" FontSize="16" Click="orderHistoryBtn_Click"/>
+                <Button Background="#008CBA" Name="profileBtn" Foreground="White" Content="Profile" Margin="0,22,0,0" VerticalAlignment="Top" Width="176" Height="37" FontSize="16" Click="profileBtn_Click"/>
+                <Image HorizontalAlignment="Center" Source="D:\.NET Location\PRN221_FinalProject\Post\Assets\logout_icon_151219.png" Height="31" VerticalAlignment="Top" Width="50" Margin="0,90,0,0"/>
+            </StackPanel>
+        </Grid>
+        <hc:TabControl  Name="TabControl" Grid.Column="1" IsAnimationEnabled="True" IsDraggable="True" IsTabFillEnabled="True" >
+            <hc:TabItem  IsSelected="True" Name="SaleTab" Header="Sale">
+                <Grid Background="White">
+                    <!--Template for all Tab-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="85*"/>
+                        <ColumnDefinition Width="27*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                    </Grid.ColumnDefinitions>
+                    <hc:SimpleText Grid.Column="7" Grid.ColumnSpan="2" FontSize="20"  Text="06/11/2023" Margin="68,17,38,15" FontStyle="Italic"/>
+                    <Viewbox  Grid.Column="7" Grid.ColumnSpan="4" Margin="112,0,0,10" >
+                        <hc:FlipClock  HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="6" Width="563" Height="168"/>
+                    </Viewbox>
+
+                    <!--Template for all Tab-->
+
+
+                    <Image Name="TransferInforImage" Visibility="Collapsed" Panel.ZIndex="3" Grid.RowSpan="8" Grid.Row="0" Grid.ColumnSpan="10"/>
+                    <hc:SimpleText Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Search Product by BarCode or Name" Margin="10,31,1,10"/>
+                    <hc:SearchBar Name="txtSearchProduct"  VerticalAlignment="Top" Margin="10,51,10,0" Height="33" Grid.RowSpan="2" Grid.ColumnSpan="8" FontSize="20" TextChanged="txtSearchProduct_TextChanged" />
+                    <DataGrid Panel.ZIndex="1" x:Name="searchResults" Margin="10,15,10,40" AutoGenerateColumns="false" Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="4" Visibility="Collapsed" Background="White" SelectionChanged="searchResults_SelectionChanged" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Product Code" Binding="{Binding ProductCode}"/>
+                            <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}"/>
+                            <DataGridTextColumn Header ="Category" Binding="{Binding Category.CategoryName}"/>
+                            <DataGridTextColumn Header ="Unit Price" Binding="{Binding UnitPrice}"/>
+                            <DataGridTextColumn Header="Unit Name" Binding="{Binding Unit.UnitName}"/>
+                            <DataGridTextColumn Header="Discount" Binding="{Binding DiscountPercentage}"/>
+                            <!-- Thêm các cột khác tại đây cho các thuộc tính khác của sản phẩm. -->
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <ListView Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="8" Name="lvSelectedProducts" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,31,10,61"  FontSize="14">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Product Name" Width="120" DisplayMemberBinding="{Binding Path=Key.ProductName}" />
+                                <GridViewColumn Header="Category" Width="120" DisplayMemberBinding="{Binding Path=Key.Category.CategoryName}" />
+                                <GridViewColumn Header="Unit Price" Width="120" DisplayMemberBinding="{Binding Path=Key.UnitPrice}" />
+                                <GridViewColumn Header="Unit" Width="120" DisplayMemberBinding="{Binding Path=Key.Unit.UnitName}" />
+                                <GridViewColumn Header="Discount (%)" Width="120" DisplayMemberBinding="{Binding Path=Key.DiscountPercentage}" />
+                                <GridViewColumn Header="Quantity" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                                                <Button Name="SubtractButton" Content="-" Width="25" Click="SubtractButton_Click"/>
+                                                <TextBlock Text="{Binding Path=Value}" Width="10" Margin="4" HorizontalAlignment="Center" />
+                                                <Button Name="AddButton" Content="+" Width="25" Click="AddButton_Click"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <hc:StepBar Grid.Row="8" Grid.ColumnSpan="11" Name="step" Margin="0,13,0,0" >
+                        <hc:StepBarItem Content="Order"/>
+                        <hc:StepBarItem Content="Customer Registration"/>
+                        <hc:StepBarItem Content="Payment"/>
+                        <hc:StepBarItem Content="Confirm Payment"/>
+                    </hc:StepBar>
+
+                    <!--Left bar-->
+                    <Grid Grid.Column="7" Grid.ColumnSpan="4" Grid.RowSpan="9" Margin="112,51,0,61">
+                        <hc:TabControl Name="PaymentTabControl" IsAnimationEnabled="True" IsDraggable="True" IsTabFillEnabled="True">
+                            <hc:TabItem IsSelected="True" Header="Cash Payment">
+                                <Grid Background="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <hc:SimpleText Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Add Customer" Margin="10,5,33,22" RenderTransformOrigin="0.5,0.5"/>
+                                    <hc:SearchBar Name="txtCustomerSearch" Grid.ColumnSpan="8"  VerticalAlignment="Top" Text="{Binding SearchText}" Height="33" FontSize="18" Margin="5,23,10,0" Grid.RowSpan="2" TextChanged="txtCustomerSearch_TextChanged" />
+                                    <Button Name="newCustomerCashBtn" Content="+ New" Foreground="White" Grid.Column="7" Grid.ColumnSpan="3" FontSize="10" Width="62" Height="33" HorizontalAlignment="Left" Margin="28,23,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Background="#FF20819A"/>
+
+                                    <DataGrid Panel.ZIndex="2" x:Name="customerSearchResults" Margin="5,3,10,40" Visibility="Collapsed" AutoGenerateColumns="false" Grid.ColumnSpan="8" Grid.RowSpan="4" Background="White" SelectionChanged="customerSearchResults_SelectionChanged" Grid.Row="1" >
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Width="60" Header="Code" Binding="{Binding CustomerCode}"/>
+                                            <DataGridTextColumn Width="100" Header="Name" Binding="{Binding CustomerName}"/>
+                                            <DataGridTextColumn Header="Point" Binding="{Binding Point}"/>
+                                            <!-- Thêm các cột khác tại đây cho các thuộc tính khác của sản phẩm. -->
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                    <hc:SimpleText Text="Total" Grid.Row="1" Margin="5,23,0,1" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText Text="Discount" Grid.Row="2" Margin="5,23,0,1" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText  FontSize="14px" Text="TOTAL PAYMENT" Margin="5,23,0,1" Grid.Row="3" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText Name="txtCustomerNameCash" Text="Customer" FontSize="14px" Margin="5,23,0,1" Grid.Row="4" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText Text="Money given by Customer" FontSize="14px" Margin="5,23,0,1" Grid.Row="5" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText Text="Money return to Customer" FontSize="14px" Margin="5,23,0,1" Grid.Row="6" Grid.ColumnSpan="6"/>
+                                    
+                                    
+                                    <TextBox Name="txtTotalCash"  Grid.Row="1" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="5"/>
+                                    <TextBox Name="txtDiscountCash"  Grid.Row="2" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4"/>
+                                    <TextBox Name="txtTotalPayableCash"  Grid.Row="3" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4"/>
+                                    <hc:NumericUpDown x:Name="txtNumberOfVoucherCash" Grid.Row="4" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4" />
+                                    <TextBox Grid.Row="5" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4"/>
+                                    <TextBox Grid.Row="6" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4"/>
+
+                                    <Button Name="transferMethodBtn" Grid.Row="7" Grid.ColumnSpan="4" Grid.Column="0" Content="Transfer Method" Grid.RowSpan="2" Background="#FFE8E6E6" Height="45" Margin="5,23,0,0" VerticalAlignment="Top" Width="111" HorizontalAlignment="Left" Click="transferMethodBtn_Click"/>
+                                    <Button Name="confirmCashBtn" Click="confirmCashBtn_Click" Grid.Row="7" Grid.ColumnSpan="5" Grid.Column="3" Foreground="White" Content="CONFIRM" Grid.RowSpan="2" Background="#FF46A0BF" Height="45" Margin="20,23,0,0" VerticalAlignment="Top" Width="137" HorizontalAlignment="Left" FontSize="22"/>
+                                    <Button Name="cancelCashBtn" Click="cancelCashBtn_Click" Grid.Row="7" Grid.ColumnSpan="3" Grid.Column="7" Foreground="White" Content="Cancel" Grid.RowSpan="2" Background="#FFBF4646" Height="45" Margin="28,23,0,0" VerticalAlignment="Top" Width="67" HorizontalAlignment="Left" FontSize="12"/>
+
+                                </Grid>
+
+                            </hc:TabItem>
+                            <hc:TabItem  Header="Transfer Payment">
+                                <Grid Background="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                        <RowDefinition Height="0.2*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                        <ColumnDefinition Width="0.2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <hc:SimpleText Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Add Customer" Margin="10,5,33,22" RenderTransformOrigin="0.5,0.5"/>
+                                    <hc:SearchBar Name="txtCustomerSearch1" TextChanged="txtCustomerSearch_TextChanged" Grid.ColumnSpan="8"  VerticalAlignment="Top" Height="33" FontSize="18" Margin="5,23,10,0" Grid.RowSpan="2" />
+                                    <Button Name="newCustomerTransferBtn" Content="+ New" Foreground="White" Grid.Column="7" Grid.ColumnSpan="3" FontSize="10" Width="62" Height="33" HorizontalAlignment="Left" Margin="28,23,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Background="#FF20819A"/>
+
+                                    <hc:SimpleText Text="Total" Grid.Row="1" Margin="5,23,0,1" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText Text="Discount" Grid.Row="2" Margin="5,23,0,1" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText  FontSize="14px" Text="TOTAL PAYMENT" Margin="5,23,0,1" Grid.Row="3" Grid.ColumnSpan="6"/>
+                                    <hc:SimpleText Name="txtCustomerNameTransfer" FontSize="14px" Text="Customer" Margin="5,23,0,1" Grid.Row="4" Grid.ColumnSpan="6"/>
+
+                                    <TextBox Name="txtTotalTransfer" Grid.Row="1" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="5"/>
+                                    <TextBox Name="txtDiscountTransfer" Grid.Row="2" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4"/>
+                                    <TextBox Name="txtTotalPayableTransfer" Grid.Row="3" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4"/>
+                                    <hc:NumericUpDown Name="txtNumberOfVoucherTransfer" Grid.Row="4" Grid.Column="6" HorizontalAlignment="Right" Width="90px" Margin="33,16,5,1" Grid.ColumnSpan="4" />
+                                    
+                                    <Button Name="exportQRBtn" Foreground="White" Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="3" Content="Export QR" Background="#FF39AB3A" Width="79" HorizontalAlignment="Left" Margin="16,0,0,0" Click="exportQRBtn_Click"/>
+
+                                    <Button  Name="cashMethodBtn" Grid.Row="7" Grid.ColumnSpan="4" Grid.Column="0" Content="Cash Method" Grid.RowSpan="2" Background="#FFE8E6E6" Height="45" Margin="5,23,0,0" VerticalAlignment="Top" Width="111" HorizontalAlignment="Left" Click="cashMethodBtn_Click"/>
+                                    <Button Name="confirmTransferBtn" Click="confirmTransferBtn_Click" Grid.Row="7" Grid.ColumnSpan="5" Grid.Column="3" Foreground="White" Content="CONFIRM" Grid.RowSpan="2" Background="#FF46A0BF" Height="45" Margin="20,23,0,0" VerticalAlignment="Top" Width="137" HorizontalAlignment="Left" FontSize="22"/>
+                                    <Button Name="cancelTransferBtn" Click="cancelTransferBtn_Click" Grid.Row="7" Grid.ColumnSpan="3" Grid.Column="7" Foreground="White" Content="Cancel" Grid.RowSpan="2" Background="#FFBF4646" Height="45" Margin="28,23,0,0" VerticalAlignment="Top" Width="67" HorizontalAlignment="Left" FontSize="12"/>
+
+                                </Grid>
+                            </hc:TabItem>
+                        </hc:TabControl>
+                    </Grid>
+                </Grid>
+            </hc:TabItem>
+            <hc:TabItem Header="Customer">
+                <Grid Background="White">
+                    <!--Template for all Tab-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="96*"/>
+                        <ColumnDefinition Width="17*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                        <ColumnDefinition Width="112*"/>
+                    </Grid.ColumnDefinitions>
+                    <hc:SimpleText Grid.Column="7" Grid.ColumnSpan="2" FontSize="20"  Text="06/11/2023" Margin="68,17,38,15" FontStyle="Italic"/>
+                    <Viewbox  Grid.Column="7" Grid.ColumnSpan="4" Margin="112,0,0,10" >
+                        <hc:FlipClock  HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="6" Width="563" Height="168"/>
+                    </Viewbox>
+
+                    <!--Template for all Tab-->
+                    <hc:SimpleText Text="Search by Name" Grid.Row="0" Grid.Column="0" Margin="40,34,112,16" Grid.ColumnSpan="3"/>
+                    <hc:AutoCompleteTextBox VerticalAlignment="Top" ItemsSource="{Binding Items}" Text="{Binding SearchText}" DisplayMemberPath="Name"  Margin="40,51,0,0" Height="33" Grid.RowSpan="2" Grid.ColumnSpan="4" FontSize="20" />
+                    <Button Grid.Column="4" Foreground="White" Content="Refresh" Height="33" HorizontalAlignment="Left" Margin="19,51,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="84" Background="#FFB5B5B5"/>
+                    <Button Grid.Column="4" Foreground="White" Content="Apply" Height="33" HorizontalAlignment="Left" Margin="108,51,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="84" Grid.ColumnSpan="2" Background="#FF2E9ABF"/>
+                    <Button Grid.Column="5" Foreground="White" Content="Cancel" Height="33" HorizontalAlignment="Left" Margin="84,51,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="84" Grid.ColumnSpan="3" Background="#FFCA4A4A"/>
+                    <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Margin="30,30,30,30">
+                        <hc:SimpleText Text="Customer Code" Margin="10 0 0 0"/>
+                        <TextBox Name="txtCustomerCode" Margin="10 0 10 10"
+                                 Text="{Binding CustomerCode, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                        <hc:SimpleText Text="Customer Name" Margin="10 0 0 0"/>
+                        <TextBox Name="txtCustomerName" Margin="10 0 10 10"
+                                  Text="{Binding CustomerName, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                        <hc:SimpleText Text="Customer Contact" Margin="10 0 0 0"/>
+                        <TextBox Name="txtContact" Margin="10 0 10 10"
+                                 Text="{Binding Contact, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.Column="3" Grid.ColumnSpan="3" Margin="30,30,13,30">
+                        <hc:SimpleText Text="Customer Address" Margin="10 0 0 0"/>
+                        <TextBox Name="txtAddress" Margin="10 0 10 10"
+                                 Text="{Binding Address, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                        <hc:SimpleText Text="Customer Point" Margin="10 0 0 0"/>
+                        <TextBox Name="txtPoint" Margin="10 0 10 10"
+                                 Text="{Binding Point, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                    </StackPanel>
+
+                    <ListView x:Name="lvCustomer" Grid.Row="3" Grid.ColumnSpan="11" Grid.RowSpan="6" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="30 60 30 30">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Customer Code" Width="230" DisplayMemberBinding="{Binding Path=CustomerCode}"/>
+                                <GridViewColumn Header="Customer Name" Width="230" DisplayMemberBinding="{Binding Path=CustomerName}" />
+                                <GridViewColumn Header="Contact" Width="230" DisplayMemberBinding="{Binding Path=Contact}" />
+                                <GridViewColumn Header="Address" Width="230" DisplayMemberBinding="{Binding Path=Address}" />
+                                <GridViewColumn Header="Point" Width="100" DisplayMemberBinding="{Binding Path=Point}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </hc:TabItem>
+            <hc:TabItem Header="Order History" Height="30" VerticalAlignment="Top">
+                <Grid Background="White">
+                    <!--Template for all Tab-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                    </Grid.ColumnDefinitions>
+                    <hc:SimpleText Grid.Column="6" Grid.ColumnSpan="2" FontSize="20"  Text="06/11/2023" Margin="68,17,39,15" FontStyle="Italic"/>
+                    <Viewbox  Grid.Column="6" Grid.ColumnSpan="4" Margin="112,0,0,10" >
+                        <hc:FlipClock  HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="6" Width="563" Height="168"/>
+                    </Viewbox>
+
+                    <!--Template for all Tab-->
+                    <hc:SimpleText Text="Search by Customer name" Grid.Row="0" Grid.Column="0" Margin="40,34,112,16" Grid.ColumnSpan="3"/>
+                    <hc:AutoCompleteTextBox VerticalAlignment="Top" ItemsSource="{Binding Items}" Text="{Binding SearchText}" DisplayMemberPath="Name"  Margin="40,51,99,0" Height="33" Grid.RowSpan="2" Grid.ColumnSpan="3" FontSize="20" />
+
+                    <hc:SimpleText Text="Total Amount" Grid.Row="0" Grid.Column="2" Margin="18,34,99,16" Grid.ColumnSpan="2"/>
+                    <hc:NumericUpDown Minimum="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="18,51,99,50" Grid.RowSpan="2" />
+
+                    <hc:SimpleText Text="Payment Type" Grid.Row="0" Grid.Column="3" Margin="18,34,99,16" Grid.ColumnSpan="2"/>
+                    <ComboBox Grid.Column="3" SelectedValue="Cash" Grid.ColumnSpan="2" Margin="18,51,94,50" Grid.RowSpan="2"/>
+
+                    <hc:SimpleText Text="Recorded Date" Grid.Row="0" Grid.Column="4" Margin="23,34,89,16" Grid.ColumnSpan="2"/>
+                    <hc:DatePicker hc:InfoElement.TitleWidth="140" Grid.Column="4" Grid.ColumnSpan="2" Margin="23,51,89,50" Grid.RowSpan="2" />
+
+                    <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Margin="30">
+                        <hc:SimpleText Text="Customer Name" Margin="10 0 0 0"/>
+                        <TextBox  Margin="10 0 10 10"
+                                 Text="{Binding CustomerCode, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                        <hc:SimpleText Text="Payment Type" Margin="10 0 0 0"/>
+                        <ComboBox Margin="10 0 10 10"/>
+                        <!--<TextBox Margin="10 0 10 10"
+                                  Text="{Binding CustomerName, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>-->
+                        <hc:SimpleText Text="Total Amount" Margin="10 0 0 0"/>
+                        <TextBox Margin="10 0 10 10"
+                                 Text="{Binding Contact, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.Column="3" Grid.ColumnSpan="3" Margin="30">
+                        <hc:SimpleText Text="Recorded Date" Margin="10 0 0 0"/>
+                        <TextBox  Margin="10 0 10 10"
+                                 Text="{Binding Address, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                        <hc:SimpleText Text="Employee" Margin="10 0 0 0"/>
+                        <TextBox  Margin="10 0 10 10"
+                                 Text="{Binding Point, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}"/>
+                        <Button  Margin="10 0 10 10" Foreground="White" Content="Delete Invoice" Height="33" Width="115" HorizontalAlignment="Right" Background="#FFCA4A4A"/>
+                    </StackPanel>
+
+                    <ListView Name="lvInvoices" Grid.Row="3" Grid.ColumnSpan="5" Grid.RowSpan="6" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="30,60,10,30">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Customer Name" Width="100" DisplayMemberBinding="{Binding Path=CustomerCode}"/>
+                                <GridViewColumn Header="Payment type" Width="100" DisplayMemberBinding="{Binding Path=CustomerName}" />
+                                <GridViewColumn Header="Total Amount" Width="100" DisplayMemberBinding="{Binding Path=Contact}" />
+                                <GridViewColumn Header="Recorded Date" Width="100" DisplayMemberBinding="{Binding Path=Address}" />
+                                <GridViewColumn Header="Employee" Width="100" DisplayMemberBinding="{Binding Path=Point}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <ListView Name="lvProductsInInvoice" Grid.Row="3" Grid.ColumnSpan="5" Grid.RowSpan="6" Grid.Column="5" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,60,30,30">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Product Name" Width="120" DisplayMemberBinding="{Binding Path=CustomerCode}"/>
+                                <GridViewColumn Header="Quantity" Width="120" DisplayMemberBinding="{Binding Path=CustomerName}" />
+                                <GridViewColumn Header="Unit Price" Width="120" DisplayMemberBinding="{Binding Path=Contact}" />
+                                <GridViewColumn Header="Sub total" Width="120" DisplayMemberBinding="{Binding Path=Address}" />
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </hc:TabItem>
+            <hc:TabItem Header="Profile">
+                <Grid Background="White">
+                    <!--Template for all Tab-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                    </Grid.ColumnDefinitions>
+                    <hc:SimpleText Grid.Column="6" Grid.ColumnSpan="2" FontSize="20"  Text="06/11/2023" Margin="68,17,39,15" FontStyle="Italic"/>
+                    <Viewbox  Grid.Column="6" Grid.ColumnSpan="4" Margin="112,0,0,10" >
+                        <hc:FlipClock  HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="6" Width="563" Height="168"/>
+                    </Viewbox>
+
+                    <!--Template for all Tab-->
+                    <StackPanel Grid.Row="1" Grid.RowSpan="10" Grid.Column="3" Grid.ColumnSpan="4" Margin="30">
+                        <hc:SimpleText Text="Username" FontSize="18px" Margin="10 0 0 0"/>
+                        <TextBox  Margin="10 0 10 10"
+                                 Text="{Binding Address, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}" Height="50" FontSize="20px" FontFamily="Times New Roman" FontWeight="SemiBold"/>
+                        <hc:SimpleText Text="Fullname" FontSize="18px" Margin="10 0 0 0"/>
+                        <TextBox  Margin="10 0 10 10"
+                                 Text="{Binding Point, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}" Height="50"  FontSize="20px"  FontFamily="Times New Roman" FontWeight="SemiBold"/>
+                        <hc:SimpleText Text="Contact" FontSize="18px" Margin="10 0 0 0"/>
+                        <TextBox  Margin="10 0 10 10"
+                                 Text="{Binding Point, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}" Height="50"  FontSize="20px"  FontFamily="Times New Roman" FontWeight="SemiBold"/>
+                        <hc:SimpleText Text="Role" FontSize="18px" Margin="10 0 0 0"/>
+                        <TextBox  Margin="10 0 10 10"
+                                 Text="{Binding Point, Mode=OneWay}" DataContext="{Binding SelectedItem, ElementName=lvCustomer}" Height="50"  FontSize="20px"  FontFamily="Times New Roman" FontWeight="SemiBold"/>
+                        <Button  Margin="10 0 10 10" Foreground="White" Content="Save Changes" Height="53" Width="197" FontSize="24px" HorizontalAlignment="Right" Background="#FF1A842B"/>
+                    </StackPanel>
+
+                </Grid>
+            </hc:TabItem>
+
+        </hc:TabControl>
+    </Grid>
+</Window>
