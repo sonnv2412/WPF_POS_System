@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 D:\.NET Location\PRN221_FinalProject\Post\App.xaml
-61887238721
+2859197849
 
-31-619878817
+31-1022475768
 224-100178649
-View\CustomerWindow.xaml;View\DemoHandyControl.xaml;View\EmployeeWindow.xaml;View\Login.xaml;View\MainWindow.xaml;View\OwnerWindow.xaml;
+View\DemoHandyControl.xaml;View\Login.xaml;
 
 False
 

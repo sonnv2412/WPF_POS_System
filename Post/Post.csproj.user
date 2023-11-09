@@ -7,39 +7,18 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="View\CustomerWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\DemoHandyControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="View\EmployeeWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Login.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\OwnerWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="View\CustomerWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="View\DemoHandyControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\EmployeeWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="View\Login.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="View\MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="View\OwnerWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

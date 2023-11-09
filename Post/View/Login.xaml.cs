@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Post.Domain.Service;
+using Post.Domain.Service.IService;
 using Post.Model;
 
 namespace Post.View
@@ -20,38 +22,34 @@ namespace Post.View
     /// </summary>
     public partial class Login : Window
     {
-        ////AccountService accountService;
-        ////PostContext context;
-        //AccountRepository accountRepository;
-        //public Login()
-        //{
-        //    accountRepository= new AccountRepository();
-        //    InitializeComponent();
-        //}
+        IProductService productService;
+        ICustomerService customerService;
+        IInvoiceService invoiceService;
+        IAccountService accountService;
+        public Login(IAccountService accountService, IProductService productService, ICustomerService customerService, IInvoiceService invoiceService)
+        {
+            this.accountService = accountService;
+            this.customerService = customerService;
+            this.productService = productService;
+            this.invoiceService = invoiceService;
+            InitializeComponent();
+        }
 
-        //private void LoginButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    //Account account = accountService.login(txtUsername.Text, txtPassword.Password);
-        //    Account account = accountRepository.getAccount(txtUsername.Text, txtPassword.Password);
-        //    if (account != null)
-        //    {
-        //        accountRepository.setCurrentAccount(account);
-        //        this.Hide();
-        //        if (account.Role == 2)
-        //        {
-        //            new EmployeeWindow().Show();
-        //        }
-        //        else
-        //        {
-        //            new OwnerWindow().Show();
-        //        }          
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Login failed. Username or Password is invalid!");
-        //    }
-        //}
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            accountService.Login(txtUsername.Text, txtPassword.Password);
+            Account account = AccountService.account;
+            if (account != null && account.Role == 2)
+            {
+                this.Hide();
+                new DemoHandyControl(accountService ,productService, customerService, invoiceService).Show();
+            }
+            else
+            {
+                MessageBox.Show("Login failed. Username or Password is invalid!");
+            }
+        }
 
-        //public void close() => this.close();
+        public void close() => this.close();
     }
 }

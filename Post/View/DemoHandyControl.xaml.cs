@@ -1,5 +1,6 @@
 ﻿using HandyControl.Tools.Extension;
 using Microsoft.EntityFrameworkCore;
+using Post.Domain.Service;
 using Post.Domain.Service.IService;
 using Post.Model;
 using System;
@@ -27,20 +28,27 @@ namespace Post.View
         IProductService productService;
         ICustomerService customerService;
         IInvoiceService invoiceService;
+        IAccountService accountService;
         Dictionary<Product, int> OrderedProducts = new Dictionary<Product, int>();
         private int NumberOfAppliedVoucher = 0;
         private List<Product> products;
         private double totalPayable = 0;
         private Customer selectedCustomer;
-        public DemoHandyControl(IProductService productService, ICustomerService customerService, IInvoiceService invoiceService)
+        public DemoHandyControl(IAccountService accountService, IProductService productService, ICustomerService customerService, IInvoiceService invoiceService)
         {
             this.customerService = customerService;
             this.productService = productService;
             this.invoiceService = invoiceService;
+            this.accountService = accountService;
             InitializeComponent();
             load();
             loadCustomer();
             loadInvoice();
+        }
+
+        public DemoHandyControl()
+        {
+            InitializeComponent();
         }
 
         private void saleBtn_Click(object sender, RoutedEventArgs e)
@@ -92,9 +100,9 @@ namespace Post.View
         }
 
         private void customerSearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {         
+        {
             if (customerSearchResults.SelectedItem != null)
-            {             
+            {
                 selectedCustomer = customerSearchResults.SelectedItem as Customer;
                 txtCustomerSearch.Text = "";
                 txtCustomerSearch1.Text = "";
@@ -103,7 +111,7 @@ namespace Post.View
         }
 
         private void loadOrderedProduct()
-        {     
+        {
             CaculateTotalPayable();
             if (selectedCustomer != null)
             {
@@ -281,7 +289,7 @@ namespace Post.View
                 invoice.PaymentType = PaymentType;
                 invoice.TotalAmount = totalPayable - NumberOfAppliedVoucher * 30000;
                 invoice.DateRecorded = DateTime.Now;
-                invoice.AccountId = 1;
+                invoice.AccountId = AccountService.account.AccountId;
 
                 invoiceService.AddInvoice(invoice, selectedCustomer, OrderedProducts);
                 step.StepIndex = 3;
@@ -487,7 +495,7 @@ namespace Post.View
         // Code xu ly man hinh Invoice detail ///////////////////////////////////////////////////     
         private void loadInvoice()
         {
-            cboPaymentTypeOrder.ItemsSource = new String[] {"All", "Cash", "Transfer" };          
+            cboPaymentTypeOrder.ItemsSource = new String[] { "All", "Cash", "Transfer" };
             lvInvoices.ItemsSource = invoiceService.GetAllInvoices();
         }
 
@@ -507,14 +515,20 @@ namespace Post.View
 
         private void txtSearchCustomerOrderSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-               filterInvoices();
+            filterInvoices();
         }
-     
+
         private void txtRecordDateOrderSearch_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             filterInvoices();
         }
 
+        private void LogOutBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            AccountService.account = null;
+            new Login(accountService, productService, customerService, invoiceService).Show();
+            this.Close();
+        }
     }
 
 }

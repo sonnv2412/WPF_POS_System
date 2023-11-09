@@ -33,10 +33,13 @@ namespace Post
             serviceColection.AddTransient<IInvoiceService, InvoiceService>();
             serviceColection.AddTransient<IInvoiceRepository, InvoiceRepository>();
 
-            serviceColection.AddTransient<DemoHandyControl>();
+            serviceColection.AddTransient<IAccountService, AccountService>();
+            serviceColection.AddTransient<IAccountRepository, AccountRepository>();
+
+            serviceColection.AddTransient<Login>();
             serviceColection.AddScoped<PostContext>();
             var ServiceProvider = serviceColection.BuildServiceProvider();
-            ServiceProvider.GetRequiredService<DemoHandyControl>().Show();
+            ServiceProvider.GetRequiredService<Login>().Show();
         }
     }
 }

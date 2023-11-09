@@ -20,7 +20,7 @@
             <TextBox x:Name="txtUsername" Margin="0 0 0 10"/>
             <TextBlock Text="Password"/>
             <PasswordBox x:Name="txtPassword" Margin="0 0 0 10"/>
-            <!--<Button Content="Login" Click="LoginButton_Click" Width="80" Background="White"/>-->
+            <Button Content="Login" Click="LoginButton_Click" Width="80" Background="White"/>
         </StackPanel>
     </Grid>
 </Window>

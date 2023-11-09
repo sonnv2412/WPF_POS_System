@@ -20,7 +20,7 @@
                 <Button Background="#008CBA" Name="saleBtn" Foreground="White" Content="Sale" Margin="0,78,0,0" VerticalAlignment="Top" Width="176" Height="37" FontSize="16" Click="saleBtn_Click" Cursor=""/>
                 <Button Background="#008CBA" Name="customerBtn" Foreground="White"  Content="Customer" Margin="0,22,0,0" VerticalAlignment="Top" Width="176" Height="37" FontSize="16" Click="customerBtn_Click"/>
                 <Button Background="#008CBA" Name="orderHistoryBtn" Foreground="White"  Content="Order History" Margin="0,22,0,0" VerticalAlignment="Top" Width="176" Height="38" FontSize="16" Click="orderHistoryBtn_Click"/>
-                <Image HorizontalAlignment="Center" Source="D:\.NET Location\PRN221_FinalProject\Post\Assets\logout_icon_151219.png" Height="31" VerticalAlignment="Top" Width="50" Margin="0,90,0,0"/>
+                <Button x:Name="LogOutBtn" Foreground="white" HorizontalAlignment="Center" Content="Logout" Height="31" Width="90" Margin="0,90,0,0" Click="LogOutBtn_Click_1" Background="#FFB9B7B7" FontWeight="Bold"/>
             </StackPanel>
         </Grid>
         <hc:TabControl  Name="TabControl" Grid.Column="1" IsAnimationEnabled="True" IsDraggable="True" IsTabFillEnabled="True" >

@@ -5,12 +5,10 @@ D:\.NET Location\PRN221_FinalProject\Post\bin\Debug\net6.0-windows\Post.dll
 D:\.NET Location\PRN221_FinalProject\Post\bin\Debug\net6.0-windows\Post.pdb
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\Post.csproj.AssemblyReference.cache
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\Login.g.cs
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\MainWindow.g.cs
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\App.g.cs
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\Post_MarkupCompile.cache
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\Post_MarkupCompile.lref
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\Login.baml
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\MainWindow.baml
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\Post.g.resources
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\Post.GeneratedMSBuildEditorConfig.editorconfig
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\Post.AssemblyInfoInputs.cache
@@ -67,12 +65,6 @@ D:\.NET Location\PRN221_FinalProject\Post\bin\Debug\net6.0-windows\Mono.TextTemp
 D:\.NET Location\PRN221_FinalProject\Post\bin\Debug\net6.0-windows\System.Text.Encodings.Web.dll
 D:\.NET Location\PRN221_FinalProject\Post\bin\Debug\net6.0-windows\System.Text.Json.dll
 D:\.NET Location\PRN221_FinalProject\Post\bin\Debug\net6.0-windows\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\EmployeeWindow.g.cs
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\OwnerWindow.g.cs
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\EmployeeWindow.baml
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\OwnerWindow.baml
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\CustomerWindow.g.cs
-D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\CustomerWindow.baml
 D:\.NET Location\PRN221_FinalProject\Post\bin\Debug\net6.0-windows\HandyControl.dll
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\View\DemoHandyControl.g.cs
 D:\.NET Location\PRN221_FinalProject\Post\obj\Debug\net6.0-windows\App.baml
