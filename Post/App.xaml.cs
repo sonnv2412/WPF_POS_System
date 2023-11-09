@@ -26,8 +26,12 @@ namespace Post
           
             serviceColection.AddTransient<IProductService, ProductService>();
             serviceColection.AddTransient<IProductRepository, ProductRepository>();
+            
             serviceColection.AddTransient<ICustomerService, CustomerService>();
             serviceColection.AddTransient<ICustomerRepository, CustomerRepository>();
+            
+            serviceColection.AddTransient<IInvoiceService, InvoiceService>();
+            serviceColection.AddTransient<IInvoiceRepository, InvoiceRepository>();
 
             serviceColection.AddTransient<DemoHandyControl>();
             serviceColection.AddScoped<PostContext>();

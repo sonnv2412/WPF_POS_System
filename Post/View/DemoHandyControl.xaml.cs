@@ -5,6 +5,7 @@ using Post.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,16 +26,21 @@ namespace Post.View
     {
         IProductService productService;
         ICustomerService customerService;
+        IInvoiceService invoiceService;
         Dictionary<Product, int> OrderedProducts = new Dictionary<Product, int>();
+        private int NumberOfAppliedVoucher = 0;
         private List<Product> products;
         private double totalPayable = 0;
         private Customer selectedCustomer;
-        public DemoHandyControl(IProductService productService, ICustomerService customerService)
+        public DemoHandyControl(IProductService productService, ICustomerService customerService, IInvoiceService invoiceService)
         {
             this.customerService = customerService;
             this.productService = productService;
+            this.invoiceService = invoiceService;
             InitializeComponent();
-            load();       
+            load();
+            loadCustomer();
+            loadInvoice();
         }
 
         private void saleBtn_Click(object sender, RoutedEventArgs e)
@@ -45,16 +51,13 @@ namespace Post.View
         private void customerBtn_Click(object sender, RoutedEventArgs e)
         {
             TabControl.SelectedIndex = 1;
+            loadCustomer();
         }
 
         private void orderHistoryBtn_Click(object sender, RoutedEventArgs e)
         {
             TabControl.SelectedIndex = 2;
-        }
-
-        private void profileBtn_Click(object sender, RoutedEventArgs e)
-        {
-            TabControl.SelectedIndex = 3;
+            loadInvoice();
         }
 
         private void load()
@@ -89,23 +92,25 @@ namespace Post.View
         }
 
         private void customerSearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+        {         
             if (customerSearchResults.SelectedItem != null)
-            {
-                selectedCustomer = customerSearchResults.SelectedItem as Customer;             
+            {             
+                selectedCustomer = customerSearchResults.SelectedItem as Customer;
                 txtCustomerSearch.Text = "";
+                txtCustomerSearch1.Text = "";
                 loadOrderedProduct();
             }
         }
 
         private void loadOrderedProduct()
-        {
+        {     
             CaculateTotalPayable();
             if (selectedCustomer != null)
             {
+                step.StepIndex = 2;
                 txtCustomerNameCash.Text = $"{selectedCustomer.CustomerName} ({txtNumberOfVoucherCash.Maximum} vouchers)";
                 txtCustomerNameTransfer.Text = $"{selectedCustomer.CustomerName} ({txtNumberOfVoucherTransfer.Maximum} vouchers)";
-            }          
+            }
             lvSelectedProducts.ItemsSource = OrderedProducts.ToList();
         }
 
@@ -161,13 +166,14 @@ namespace Post.View
         private void txtCustomerSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchText = "";
-            if (sender is TextBox textBox)
+            if (PaymentTabControl.SelectedIndex == 0)
             {
-                // Lấy giá trị văn bản từ TextBox
-                searchText = textBox.Text;
-
-                // Bây giờ bạn có thể sử dụng biến searchText như bạn muốn
-                Console.WriteLine("Text changed: " + searchText);
+                searchText = txtCustomerSearch.Text;
+            }
+            else
+            {
+                searchText = txtCustomerSearch1.Text;
+                //MessageBox.Show(searchText);
             }
 
 
@@ -179,12 +185,14 @@ namespace Post.View
             customerSearchResults.ItemsSource = customerSearchResultsList;
 
             // Hiển thị hoặc ẩn ListView tùy thuộc vào có kết quả tìm kiếm hay không.
-            if (!txtCustomerSearch.Text.Equals(""))
+            if (!searchText.Equals(""))
             {
+                step.StepIndex = 1;
                 customerSearchResults.Visibility = Visibility.Visible;
             }
             else
             {
+                step.StepIndex = 0;
                 customerSearchResults.Visibility = Visibility.Collapsed;
             }
         }
@@ -217,16 +225,16 @@ namespace Post.View
             {
                 if (selectedCustomer.Point > 0)
                 {
-                    int? voucher = selectedCustomer.Point % 20;
-                    txtNumberOfVoucherCash.Maximum = double.Parse(voucher.ToString());
-                    txtNumberOfVoucherTransfer.Maximum = double.Parse(voucher.ToString());
+                    int? voucher = selectedCustomer.Point / 20;
+                    txtNumberOfVoucherCash.Maximum = Convert.ToInt32(voucher);
+                    txtNumberOfVoucherTransfer.Maximum = Convert.ToInt32(voucher);
                 }
                 else
                 {
                     txtNumberOfVoucherCash.Maximum = 0;
                     txtNumberOfVoucherTransfer.Maximum = 0;
                 }
-               
+
             }
 
             txtTotalPayableTransfer.Text = totalPayable.ToString();
@@ -240,12 +248,13 @@ namespace Post.View
 
         private void cashMethodBtn_Click(object sender, RoutedEventArgs e)
         {
+            TransferInforImage.Visibility = Visibility.Collapsed;
             PaymentTabControl.SelectedIndex = 0;
         }
 
         private void HandleQRCode()
         {
-            totalPayable -= (txtNumberOfVoucherTransfer.Value * 3);
+            totalPayable -= (txtNumberOfVoucherTransfer.Value * 30000);
             BitmapImage bitmapImage = new BitmapImage(new Uri("https://img.vietqr.io/image/TPB-04074651601-print.png?amount=" + totalPayable + "&accountName=Nguyen%20Van%20Son"));
             TransferInforImage.Source = bitmapImage;
             TransferInforImage.Visibility = Visibility.Visible;
@@ -256,35 +265,256 @@ namespace Post.View
             HandleQRCode();
         }
 
-        private void confirmOrder()
+        private void confirmOrder(int PaymentType)
         {
+            if (OrderedProducts.Count <= 0)
+            {
+                MessageBox.Show("The order is empty");
+            }
+            else
+            {
+                if (selectedCustomer != null)
+                {
+                    selectedCustomer.Point -= 20 * NumberOfAppliedVoucher;
+                }
+                Invoice invoice = new Invoice();
+                invoice.PaymentType = PaymentType;
+                invoice.TotalAmount = totalPayable - NumberOfAppliedVoucher * 30000;
+                invoice.DateRecorded = DateTime.Now;
+                invoice.AccountId = 1;
 
+                invoiceService.AddInvoice(invoice, selectedCustomer, OrderedProducts);
+                step.StepIndex = 3;
+                MessageBox.Show("Invoice is successfully created!");
+                refreshOrder();
+            }
         }
 
         private void cancelOrder()
         {
+            var confirmCancel = MessageBox.Show("Do you really want to cancel this order", "Confirm Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (confirmCancel == MessageBoxResult.Yes)
+            {
+                refreshOrder();
+            }
 
         }
 
         private void confirmCashBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            confirmOrder(1);
         }
 
         private void cancelCashBtn_Click(object sender, RoutedEventArgs e)
         {
 
+            cancelOrder();
         }
 
         private void confirmTransferBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            confirmOrder(2);
         }
 
         private void cancelTransferBtn_Click(object sender, RoutedEventArgs e)
         {
+            cancelOrder();
+        }
 
+        private void txtNumberOfVoucherCash_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        {
+            NumberOfAppliedVoucher = GetNumberOfAppliedVoucher();
+        }
+
+        private int GetNumberOfAppliedVoucher()
+        {
+            int point;
+            double totalPayableTmp = totalPayable;
+            if (PaymentTabControl.SelectedIndex == 0)
+            {
+                point = Convert.ToInt32(txtNumberOfVoucherCash.Value);
+                totalPayableTmp -= point * 30000;
+                txtTotalPayableCash.Text = totalPayableTmp.ToString();
+            }
+            else
+            {
+                point = Convert.ToInt32(txtNumberOfVoucherTransfer.Value);
+                totalPayableTmp -= point * 30000;
+                txtTotalPayableTransfer.Text = totalPayableTmp.ToString();
+            }
+            return point;
+        }
+
+        private void refreshOrder()
+        {
+            step.StepIndex = 0;
+            txtCustomerNameTransfer.Text = "Customer";
+            txtCustomerNameCash.Text = "Customer";
+            TransferInforImage.Visibility = Visibility.Collapsed;
+            selectedCustomer = null;
+            OrderedProducts.Clear();
+            foreach (var control in CashGrid.Children)
+            {
+                if (control is TextBox)
+                {
+                    ((TextBox)control).Text = string.Empty;
+                }
+            }
+            foreach (var control in TransferGrid.Children)
+            {
+                if (control is TextBox)
+                {
+                    ((TextBox)control).Text = string.Empty;
+                }
+            }
+            lvSelectedProducts.ItemsSource = null;
+        }
+
+        //Code xu ly Customer tab item///////////////////////////////////////////////////////////////////
+        private void newCustomerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            step.StepIndex = 2;
+            TabControl.SelectedIndex = 1;
+        }
+
+        private void loadCustomer()
+        {
+            lvCustomer.ItemsSource = customerService.GetAllCustomer();
+        }
+
+        private void CustomerSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            String search = CustomerSearch.Text;
+
+            List<Customer> customers = customerService.GetAllCustomer().Where(c => c.CustomerCode.Contains(search) || c.CustomerName.Contains(search)).ToList();
+            lvCustomer.ItemsSource = customers;
+        }
+
+        private void RefreshCustomerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var control in CustomerGrid.Children)
+            {
+                if (control is TextBox)
+                {
+                    ((TextBox)control).Text = string.Empty;
+                }
+            }
+            lvCustomer.SelectedIndex = -1;
+        }
+
+        private void ApplyCustomerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!txtCustomerId.Text.Equals(""))
+            {
+                Customer c = GetCustomer();
+                customerService.UpdateCustomer(c);
+                var confirmRedirect = MessageBox.Show("Apply customer successfully, redirect to Orders screen ?", "Redirect to Order screen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (confirmRedirect == MessageBoxResult.Yes)
+                {
+                    selectedCustomer = c;
+                    loadOrderedProduct();
+                    TabControl.SelectedIndex = 0;
+                }
+
+            }
+        }
+
+        private void NewCustomerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Customer c = GetCustomer();
+            customerService.AddCustomer(c);
+            var confirmRedirect = MessageBox.Show("Create new customer successfully, apply and redirect to Orders screen ?", "Redirect to Order screen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (confirmRedirect == MessageBoxResult.Yes)
+            {
+                selectedCustomer = c;
+                loadOrderedProduct();
+                TabControl.SelectedIndex = 0;
+            }
+        }
+
+        private Customer GetCustomer()
+        {
+            Customer c;
+            if (txtCustomerId.Text != "")
+            {
+                c = customerService.GetCustomerById(Convert.ToInt32(txtCustomerId.Text));
+                c.CustomerName = txtCustomerName.Text;
+                c.Contact = txtContact.Text;
+                c.Address = txtAddress.Text;
+            }
+            else
+            {
+                c = new Customer();
+                c.CustomerName = txtCustomerName.Text;
+                c.Contact = txtContact.Text;
+                c.Address = txtAddress.Text;
+                c.Point = 0;
+                c.CustomerCode = GenerateRandomString(c.CustomerName, c.Contact);
+                MessageBox.Show(c.CustomerCode);
+            }
+            return c;
+        }
+
+        public static string GenerateRandomString(string name, string contact)
+        {
+            string inputString = name + contact;
+
+            using (MD5 md5 = MD5.Create())
+            {
+                // Chuyển đổi chuỗi thành mảng byte và tính giá trị băm MD5
+                byte[] inputBytes = Encoding.UTF8.GetBytes(inputString);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Chuyển giá trị băm MD5 thành chuỗi hexa
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    builder.Append(hashBytes[i].ToString("x2"));
+                }
+
+                // Giới hạn độ dài của chuỗi hash MD5 thành 25 ký tự
+                return builder.ToString().Substring(0, 20);
+            }
+        }
+
+        private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            loadOrderedProduct();
+            TabControl.SelectedIndex = 0;
+        }
+
+
+        // Code xu ly man hinh Invoice detail ///////////////////////////////////////////////////     
+        private void loadInvoice()
+        {
+            cboPaymentTypeOrder.ItemsSource = new String[] {"All", "Cash", "Transfer" };          
+            lvInvoices.ItemsSource = invoiceService.GetAllInvoices();
+        }
+
+        private void lvInvoices_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lvInvoices.SelectedItem != null)
+            {
+                Invoice invoice = lvInvoices.SelectedItem as Invoice;
+                lvProductsInInvoice.ItemsSource = invoice.Sales;
+            }
+        }
+
+        private void filterInvoices()
+        {
+            lvInvoices.ItemsSource = invoiceService.filterInvoice(txtSearchCustomerOrderSearch.Text, txtRecordDateOrderSearch.Text);
+        }
+
+        private void txtSearchCustomerOrderSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+               filterInvoices();
+        }
+     
+        private void txtRecordDateOrderSearch_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            filterInvoices();
         }
 
     }
+
 }

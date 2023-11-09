@@ -15,17 +15,17 @@ public partial class Invoice
 
     public double? AmountTendered { get; set; }
 
-    public string BankAccountName { get; set; }
+    public string? BankAccountName { get; set; }
 
-    public string BankAccountNumber { get; set; }
+    public string? BankAccountNumber { get; set; }
 
     public DateTime? DateRecorded { get; set; }
 
     public int? AccountId { get; set; }
 
-    public virtual Account Account { get; set; }
+    public virtual Account? Account { get; set; }
 
-    public virtual Customer Customer { get; set; }
+    public virtual Customer? Customer { get; set; }
 
-    public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();
+    public virtual ICollection<Sale>? Sales { get; set; } = new List<Sale>();
 }
